@@ -1,19 +1,18 @@
-# Usa una imagen base de Node.js
-FROM node:18
-
-# Establece el directorio de trabajo dentro del contenedor
-WORKDIR /apps
+# Usa una imagen base de PHP con Apache
+FROM php:8.1-apache
 
 # Copia los archivos del proyecto al contenedor
-COPY package*.json ./
+COPY . /var/www/html
 
-# Instala las dependencias
-RUN npm install
+# Establece permisos adecuados
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# Copia el resto del código fuente
-COPY . .
-# Expone el puerto en el que corre tu aplicación (ajusta según tu configuración)
-EXPOSE 3000
+# Instala extensiones necesarias (ajusta según tus necesidades)
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Comando para iniciar la aplicación
-CMD ["npm", "start"]
+# Expone el puerto 80 para Apache
+EXPOSE 80
+
+# Inicia el servidor Apache
+CMD ["apache2-foreground"]
