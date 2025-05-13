@@ -233,7 +233,7 @@ class UniversalClassLoader_osTicket
      *
      * @api
      */
-    public function register(bool $prepend = false)
+    public function register($prepend = false)
     {
         spl_autoload_register(array($this, 'loadClass'), true, $prepend);
     }
